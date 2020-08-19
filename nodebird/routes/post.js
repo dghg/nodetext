@@ -40,29 +40,27 @@ router.post('/img', isLoggedIn, upload.single('img'), (req,res)=>{
 const upload2 = multer();
 
 router.post('/', isLoggedIn, upload2.none(), async (req,res,next)=>{
-	try {
-		const post = await new Post({
+		var hashtag_id;
+		var post = new Post({
 			writer_id : req.user.id,
 			content : req.body.content,
 			img : req.body.url,
-		});
-		post.save();
+			}).save();
+	try {
 		const hashtags = req.body.content.match(/#[^/s#]*/g);
 		if(hashtags){
 			console.log(hashtags);
 			const results = await hashtags.map((tag)=>{
-				const tmp = Hashtag.find({title : tag.slice(1).toLowerCase()});
-				var newtag;
-				if(!tmp){
-					newtag = new Hashtag({
-						title : tag.slice(1).toLowerCase(),
-					});
-					newtag.save();
-				}
-				new PostHashtag({
-					postid : post.id,
-					hashtagid : newtag.id,
-				}).save();
+				const filter = {title : tag.slice(1).toLowerCase(),};
+				const tmp = Hashtag.findOneAndUpdate(filter,filter,{new : true, upsert : true});
+				tmp.then((result)=>{
+					post.then((result_post)=>{
+						new PostHashtag({
+							postid : result_post._id,
+							hashtagid : result._id,
+						}).save();
+					}).catch((err)=>{next(err);});
+				}).catch((err)=>{next(err);});
 			});
 		}
 		
