@@ -2,13 +2,22 @@ const express = require('express');
 
 const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+const Post = require('../models/post');
+const User = require('../models/user');
 
-router.get('/',(req,res)=>{
-	res.render('main', {
-		title : 'Nodebird',
-		twits : [],
-		user : null,
-		loginError : req.flash('loginError')
+router.get('/', (req,res,next)=>{
+	Post.find({}).populate('writer_id')
+	.then((posts)=>{
+		res.render('main', {
+			title : 'Nodebird',
+			twits : posts,
+			user : req.user,
+			loginError : req.flash('loginError'),
+		})		
+	})
+	.catch((err)=>{
+		console.error(err);
+		next(err);
 	});
 });
 

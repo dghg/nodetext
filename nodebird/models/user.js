@@ -1,12 +1,19 @@
 const mongoose = require('mongoose');
 
 const {Schema} = mongoose;
+const {Types : {ObjectId}} = Schema;
+var Follow = new Schema({
+	follow : {
+		type : ObjectId,
+		required : true,
+		ref : 'User',
+	}
+});
 
 const userSchema = new Schema({
 	email : {
 		type : String,
 		required : false,
-		unique : true,
 	},
 	nick : {
 		type : String,
@@ -25,6 +32,8 @@ const userSchema = new Schema({
 		type : String,
 		required : false,
 	},
+	Follwers : [Follow],
+	Followings : [Follow],
 },{
 	timestamps : true
 });

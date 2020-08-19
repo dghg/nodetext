@@ -11,6 +11,7 @@ module.exports = (passport) => {
 			if(ex) {
 				done(null, ex);
 			} else {
+				console.log(profile);
 				const newUser = await new User({
 				email : profile._json && profile._json.kaccount_email,
 				nick : profile.displayName,

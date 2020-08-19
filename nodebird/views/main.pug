@@ -20,11 +20,11 @@ block content
         button.btn 검색
       for twit in twits
         .twit
-          input.twit-user-id(type='hidden' value=twit.user.id)
+          input.twit-user-id(type='hidden' value=twit.writer_id.id)
           input.twit-id(type='hidden' value=twit.id)
-          .twit-author= twit.user.nick
-          -const follow = user && user.Followings.map(f => f.id).includes(twit.user.id);
-          if user && user.id !== twit.user.id && !follow
+          .twit-author= twit.writer_id.nick
+          -const follow = user && user.Followings.map(f => f.id).includes(twit.writer_id.id);
+          if user && user.id !== twit.writer_id.id && !follow
             button.twit-follow 팔로우하기
           .twit-content= twit.content
           if twit.img

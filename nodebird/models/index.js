@@ -7,7 +7,7 @@ module.exports = () => {
 		}
 		
 		mongoose.connect('mongodb://root:root@localhost:27017/admin', {
-			dbName : 'nodejs',
+			dbName : 'nodebird',
 		}, (err)=>{
 			if(err){
 				console.log('db connection err', err);
