@@ -4,6 +4,7 @@ const router = express.Router();
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 const Post = require('../models/post');
 const User = require('../models/user');
+const Follow = require('../models/follow');
 
 router.get('/', (req,res,next)=>{
 	Post.find({}).populate('writer_id')
@@ -23,6 +24,7 @@ router.get('/', (req,res,next)=>{
 
 
 router.get('/profile', isLoggedIn, (req,res)=>{
+	const follower = Follow.find({})
 	res.render('profile', { title : '정보', user : req.user });
 }); // isLoggedIn이 next 호출시 req.user가 존재함. deserialize 호출 
 

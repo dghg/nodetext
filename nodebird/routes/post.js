@@ -78,6 +78,30 @@ router.get('/hashtag', async (req,res,next)=>{
 	}
 	
 	try {
+		const hashtag = Hashtag.findOne({title : query});
+		let posts = [];
+		if(hashtag){
+			hashtag.then((hashtags)=>{
+				return PostHashtag.find({hashtagid : hashtags._id});
+			}).then((posthashtags)=>{
+				console.log(posthashtags);
+				let pid = [];
+				for(ph in posthashtags){
+					pid.push(posthashtags[ph].postid);
+				}
+				return Post.find({_id : { $in : pid}}); 
+			}).then((posts)=>{
+				return res.render('main', {
+					title : `${query} | Nodebird`,
+					user : req.user,
+					twits : posts,
+				})
+			})
+			.catch((err)=>{
+				console.error(err);
+				next(err);
+			});
+		}
 		
 	} catch(err){
 		console.error(err);
