@@ -6,8 +6,10 @@ const Post = require('../models/post');
 const User = require('../models/user');
 const Follow = require('../models/follow');
 
+
 router.get('/', (req,res,next)=>{
-	Post.find({}).populate('writer_id')
+	if(req.isAuthenticated()){
+		Post.find({}).populate('writer_id')
 	.then((posts)=>{
 		res.render('main', {
 			title : 'Nodebird',
@@ -20,12 +22,30 @@ router.get('/', (req,res,next)=>{
 		console.error(err);
 		next(err);
 	});
+
+	}
+	else{
+		res.render('layout', {
+			title : 'Login Page',
+			user : req.user,
+			loginError : req.flash('loginError'),
+		})
+	}
 });
 
 
 router.get('/profile', isLoggedIn, (req,res)=>{
-	const follower = Follow.find({})
-	res.render('profile', { title : '정보', user : req.user });
+	Follow.find({follower_id :req.user.id}).populate('following_id')
+		.then((results)=>{
+		console.log(results);
+		res.render('profile', { 
+			title : 'Profile',
+			followings : results,
+		});
+	}).catch((err)=>{
+		console.error(err);
+		next(err);
+	})
 }); // isLoggedIn이 next 호출시 req.user가 존재함. deserialize 호출 
 
 router.get('/join', isNotLoggedIn, (req,res)=>{

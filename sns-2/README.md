@@ -1,18 +1,19 @@
 # TODOLIST
 
 ### MODEL 구현
- 1. USER
+ 1. USER O
    - 아이디,비밀번호,닉네임, 팔로워,팔로잉
- 2. POST
+ 2. POST O
    - 작성자, 이미지, 내용, 좋아요갯수
- 3. POST-LIKE
+ 3. POST-LIKE O
    -포스트ID와 좋아요 USER ID 관계 표현
- 3. HASHTAG
+ 3. HASHTAG O
    - 해시태그 목록
- 4. POST-HASHTAG
+ 4. POST-HASHTAG O
    - 포스트와 해시태그간 관계 표현
- 5. STORY
-   - 작성자, 이미지, 본사람
+ 5. STORY O
+   - 작성자, 이미지
+ 6. 필요한 method 구현
   
 ### ROUTER 구현
  0. GET / ( 메인 화면 )
@@ -39,3 +40,8 @@
  2. 스토리
  3. 프로필
  4. ERROR
+ 
+ 
+ 
+ ### 한거
+ - 8.21 : 데이터베이스, localStrategy 구현

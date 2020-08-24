@@ -5,9 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
 require('dotenv').config();
 var app = express();
-
+const passportConfig = require('./passport');
+passportConfig(passport);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -27,6 +29,8 @@ app.use(session({
 	},
 }));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

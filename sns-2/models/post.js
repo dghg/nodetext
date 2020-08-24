@@ -17,9 +17,12 @@ const postSchema = new Schema({
 	img : {
 		type : String,
 	},
-	
+	like_count : {
+		type : Number,
+		default : 0,
+	},
 },{
 	timestamps : true
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Post', postSchema);
