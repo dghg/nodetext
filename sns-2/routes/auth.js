@@ -59,5 +59,11 @@ router.get('/logout', isLoggedIn, (req,res,next)=> {
 	req.session.destroy();
 	res.redirect('/');
 });
+router.get('/kakao', passport.authenticate('kakao')); // kakaostrategy가 로그인수행
+router.get('/kakao/callback' , passport.authenticate('kakao', {
+	failureRedirect : '/',
+}), (req,res) => {
+	res.redirect('/');
+});
 
 module.exports = router;

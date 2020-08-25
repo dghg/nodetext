@@ -16,9 +16,9 @@
  6. 필요한 method 구현
   
 ### ROUTER 구현
- 0. GET / ( 메인 화면 )
+ 0. GET / ( 메인 화면 ) o
  
- 1. 회원가입, 로그인(로그아웃) ROUTER ( passport module )
+ 1. 회원가입, 로그인(로그아웃) ROUTER ( passport module ) o
    - POST /auth/join : 계정 회원가입
    - POST /auth/login : 계정 로그인
    - GET /auth/logout : 계정 로그아웃
@@ -45,3 +45,5 @@
  
  ### 한거
  - 8.21 : 데이터베이스, localStrategy 구현
+ - 8.24 : 로그인부분 ,kakaoStrategy
+  page.js 나머지 라우터 구현 !
