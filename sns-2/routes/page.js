@@ -2,16 +2,23 @@ const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
+const Post = require('../models/post');
 
 router.get('/', (req,res,next)=> {
+	console.log(req.isAuthenticated());
 	if(req.isAuthenticated()){
-		console.log("ㅇㅅㅇ");
-		res.render('main', {
-			title : 'sns-2',
-			twits : [],
-			user : req.user,
-			loginError : req.flash('loginError'),
-		});
+		Post.find({}).populate('writer_id')
+		.then((result)=>{
+			res.render('main', {
+				title : 'MAIN',
+				twits : result,
+				user : req.user,
+				loginError : req.flash('loginError'),
+			});
+		}).catch((err)=>{
+			console.error(err);
+			next(err);
+		})
 	}
 	else{
 	res.render('layout', {
@@ -24,7 +31,7 @@ router.get('/', (req,res,next)=> {
 });
 
 router.get('/profile',isLoggedIn, (req,res) => {
-	
+	res.render('profile', );
 });
 
 router.get('/join',  (req,res) => {

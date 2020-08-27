@@ -8,12 +8,16 @@ const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
 var app = express();
+var connect = require('./models');
+connect();
+
 const passportConfig = require('./passport');
 passportConfig(passport);
 
 const indexRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
-
+const postRouter = require('./routes/post');
+const searchRouter = require('./routes/search');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -37,7 +41,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-
+app.use('/post', postRouter);
+app.use('/search', searchRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

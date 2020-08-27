@@ -4,6 +4,9 @@ block content
   .timeline
     if user
       div
+        form#search-form(action='/search' method='get')
+          input(type='text' name='search' placeholder='Search')
+          button.btn 검색
         form#twit-form(action='/post' method='post' enctype='multipart/form-data')
           .input-group
             textarea#twit(name='content' maxlength=140)
@@ -11,20 +14,16 @@ block content
             img#img-preview(src='' style='display: none;' width='250' alt='미리보기')
             input#img-url(type='hidden' name='url')
           div
-            label#img-label(for='img') 사진 업로드
+            label#img-label(for='img') ADD PICTURES
             input#img(type='file' accept='image/*')
-            button#twit-btn.btn(type='submit') 짹짹
+            button#twit-btn.btn(type='submit') UPLOAD
     .twits
-      form#hashtag-form(action='/post/hashtag')
-        input(type='text' name='hashtag' placeholder='태그 검색')
-        button.btn 검색
       for twit in twits
         .twit
           input.twit-user-id(type='hidden' value=twit.writer_id.id)
           input.twit-id(type='hidden' value=twit.id)
           .twit-author= twit.writer_id.nick
-          -const follow = user && user.Followings.map(f => f.id).includes(twit.writer_id.id);
-          if user && user.id !== twit.writer_id.id && !follow
+          if user && user.id !== twit.writer_id.id
             button.twit-follow 팔로우하기
           .twit-content= twit.content
           if twit.img

@@ -22,12 +22,12 @@
    - POST /auth/join : 계정 회원가입
    - POST /auth/login : 계정 로그인
    - GET /auth/logout : 계정 로그아웃
- 2. 검색 ROUTER
+ 2. 검색 ROUTER o
    - GET /search/hashtag?hashtag=@@ : 해시태그로 검색
    - GET /search/nick?nick=@@ : 닉네임으로 검색
  3. 포스팅 ROUTER
-   - POST /post : 게시글 업로드
-   - DELETE /post/:id : 게시글 삭제
+   - POST /post : 게시글 업로드 o
+   - DELETE /post/:id : 게시글 삭제 
    - POST /post/story : 스토리 업로드
  4. 프로필 ROUTER
    - GET /profile/:id : 프로필
@@ -35,8 +35,8 @@
    - STORY 등 
    
 ### VIEW 구현
- 0. 메인 로그인
- 1. 메인(포스팅)
+ 0. 메인 로그인 o
+ 1. 메인(포스팅) o
  2. 스토리
  3. 프로필
  4. ERROR
@@ -46,4 +46,8 @@
  ### 한거
  - 8.21 : 데이터베이스, localStrategy 구현
  - 8.24 : 로그인부분 ,kakaoStrategy
-  page.js 나머지 라우터 구현 !
+  page.js 나머지 라우터 구현
+ - 8.25 : kakaoStrategy 완료, 포스팅, search 라우터작성
+ >> 연결해야함
+ - 8.26 : search 라우터 작성완료.
+ - 8. 27 : 팔로우 기능 /프로필 완성하기 !!

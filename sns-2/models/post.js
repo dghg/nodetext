@@ -5,7 +5,7 @@ const {Types : {ObjectId}} = Schema;
 
 
 const postSchema = new Schema({
-	writer : {
+	writer_id : {
 		type : ObjectId,
 		required : true,
 		ref : 'User',

@@ -11,14 +11,14 @@ const User = require('../models/user');
 const router = express.Router();
 
 router.post('/join', isNotLoggedIn, async (req,res,next) => {
-	const { email, user, password } = req.body;
+	const { email, nick, password } = req.body;
 	try {
-		const ex = User.findOne({email});
+		const ex = await User.findOne({email});
 		if(ex) {
 			req.flash('joinError', '이미 가입된 이메일입니다.');
 			return res.redirect('/join');
 		}
-		const p = await bcrypt(password, 12);
+		const p = await bcrypt.hash(password, 12);
 		await new User({
 			email,
 			nick,
@@ -33,24 +33,24 @@ router.post('/join', isNotLoggedIn, async (req,res,next) => {
 });
 
 router.post('/login', isNotLoggedIn, (req,res,next) => {
-	passport.authenticate('local' , (error,user,info) => {
-		if(error){
-			console.error(error);
-			next(error);
+	passport.authenticate('local', (authError,user,info)=>{
+		if(authError){
+			console.error(authError);
+			return next(authError);
 		}
+		
 		if(!user){
 			req.flash('loginError', info.message);
 			return res.redirect('/');
 		}
 		
-		return req.login(user, (err)=>{
-			if(err){
-				console.error(err);
-				return next(err);
+		return req.login(user, (loginError)=>{
+			if(loginError){
+				console.error(loginError);
+				return next(loginError);
 			}
 			return res.redirect('/');
 		});
-		
 	})(req,res,next);
 });
 
