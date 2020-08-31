@@ -1,0 +1,49 @@
+doctype
+html
+  head
+    meta(charset='UTF-8')
+    title= title
+    meta(name='viewport' content='width=device-width, user-scalable=no')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    link(rel='stylesheet' href='/main.css')
+  body
+    if user && user.id
+      span.user-name= '안녕하세요' + user.nick + '님'
+      a(href='/auth/logout'): button LOGOUT
+      fieldset
+        legend 도메인 등록
+        form(action='/domain' method='post')
+          div
+            label(for='free') 무료
+            input#type-free(type='radio' name='type' value='free')
+            label(for='premium') 프리미엄
+            input#type-premium(type='radio' name='type' value='premium')
+          div
+            label(for='host') 도메인
+            input#host(name='host' placeholder="EX : dd.com ")
+          button 저장
+      table
+        tr
+          th 도메인 주소
+          th TYPE
+          th 비밀키
+        for domain in domains
+          tr
+            td= domain.host
+            td= domain.domain_type
+            td= domain.clientSecret
+    else
+      form#join-form(action='/auth/join' method='post')
+        .input-group
+          label(for='join-email') 이메일
+          input#join-email(type='email' name='email')
+        .input-group
+          label(for='join-nick') 닉네임
+          input#join-nick(type='text' name='nick')
+        .input-group
+          label(for='join-password') 비밀번호
+          input#join-password(type='password' name='password')
+        if joinError
+          .error-message= joinError
+        button#join-btn.btn(type='submit') 회원가입
+      
