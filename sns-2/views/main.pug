@@ -5,7 +5,7 @@ block content
     if user
       div
         form#search-form(action='/search' method='get')
-          input(type='text' name='search' placeholder='Search')
+          input(type='text' name='search' placeholder='Search Nick or Hashtag.')
           button.btn 검색
         form#twit-form(action='/post' method='post' enctype='multipart/form-data')
           .input-group
@@ -14,9 +14,9 @@ block content
             img#img-preview(src='' style='display: none;' width='250' alt='미리보기')
             input#img-url(type='hidden' name='url')
           div
-            label#img-label(for='img') ADD PICTURES
+            label#img-label(for='img') UPLOAD PIC
             input#img(type='file' accept='image/*')
-            button#twit-btn.btn(type='submit') UPLOAD
+            button#twit-btn.btn(type='submit') POST!
     .twits
       for twit in twits
         .twit
@@ -24,7 +24,8 @@ block content
           input.twit-id(type='hidden' value=twit.id)
           .twit-author= twit.writer_id.nick
           if user && user.id !== twit.writer_id.id
-            button.twit-follow 팔로우하기
+            button.twit-follow FOLLOW
+          .like_count= `乃 ${twit.like.length}`
           .twit-content= twit.content
           if twit.img
             .twit-img
@@ -50,6 +51,19 @@ block content
         xhr.send(formData);
       });
     }
+    document.querySelectorAll('.like_count').forEach(function (tag) {
+      tag.addEventListener('click', function(){
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          if(xhr.status===200){
+            location.reload();
+        	}
+        };
+        var postid = tag.parentNode.querySelector('.twit-id').value;
+        xhr.open('POST', '/post/like/' + postid);
+        xhr.send();
+       });
+    });
     document.querySelectorAll('.twit-follow').forEach(function (tag) {
       tag.addEventListener('click', function () {
         var isLoggedIn = document.querySelector('#my-id');

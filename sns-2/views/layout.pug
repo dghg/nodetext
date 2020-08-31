@@ -14,10 +14,10 @@ html
             .user-name= '안녕하세요! ' + user.nick + '님'
             .half
               div 팔로잉
-              .count.following-count= user.Following_count
+              .count.following-count= user.followings.length
             .half
               div 팔로워
-              .count.follower-count= user.Follower_count
+              .count.follower-count= user.followers.length
             input#my-id(type='hidden' value=user.id)
             a#my-profile.btn(href='/profile') 내 프로필
             a#logout.btn(href='/auth/logout') 로그아웃

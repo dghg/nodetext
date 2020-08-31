@@ -1,14 +1,22 @@
-extends layout
-
-block content
-  .timeline
-    .followings.half
-      h2 팔로잉 목록
-      if followings
-        for following in followings
-          div= following.following_id.nick
-    .followers.half
-      h2 팔로워 목록
-      if followers
-        for follower in followers
-          div= follower.nick
+doctype
+html
+  head
+    meta(charset='UTF-8')
+    title= title
+    meta(name='viewport' content='width=device-width, user-scalable=no')
+    meta(http-equiv='X-UA-Compatible' content='IE=edge')
+    link(rel='stylesheet' href='/main.css')
+  body
+    form#main-form(action='/' method='get')
+      button.btn 뒤로
+    .timeline
+      .followings.half
+        h2 팔로잉 목록
+        if followings
+          for following in followings
+            div= following.nick
+      .followers.half
+        h2 팔로워 목록
+        if followers
+          for follower in followers
+            div= follower.nick

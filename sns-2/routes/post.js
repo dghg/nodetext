@@ -73,7 +73,20 @@ router.post('/', isLoggedIn, upload2.none(), async (req,res,next)=> {
 		next(err);
 	}
 });
-
+router.post('/like/:id', isLoggedIn, async(req,res,next)=>{
+	try {
+		const query = req.params.id;
+		if(!query){
+			return res.redirect(req.get('referer'));
+		}
+		const p = await Post.findOne({_id : query});
+		await p.clickLike(req.user.id);
+		return res.redirect(req.get('referer'));
+	} catch(err) {
+		console.error(err);
+		next(err);
+	}
+});
 router.delete('/', isLoggedIn, async (req,res,next)=>{
 	
 });

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const {Schema} = mongoose;
 const {Types : {ObjectId}} = Schema;
+const follow = {type : ObjectId, required : true, ref : 'User'};
 
 const userSchema = new Schema({
 	email : {
@@ -25,16 +26,24 @@ const userSchema = new Schema({
 		type : String,
 		required : false,
 	},
-	Follower_count : {
-		type : Number,
-		default : 0,
-	},
-	Following_count : {
-		type : Number,
-		default : 0,
-	},
+	followings : [follow],
+	followers : [follow],
 },{
 	timestamps : true
 });
 
+userSchema.methods.addFollowing = async function (following) {
+	try {
+		console.log(this);
+		await this.followings.push(following);
+		return this.save();
+	} catch(err) {
+		console.error(err);
+	}
+}
+
+userSchema.methods.addFollower = async function (follower) {
+	await this.followers.push(follower);
+	return this.save();
+}
 module.exports = mongoose.model('User', userSchema);

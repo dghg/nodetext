@@ -17,12 +17,27 @@ const postSchema = new Schema({
 	img : {
 		type : String,
 	},
-	like_count : {
-		type : Number,
-		default : 0,
-	},
+	like : [{type : ObjectId, ref : 'User'}],
 },{
 	timestamps : true
 });
+
+postSchema.methods.clickLike = async function (id) {
+	try {
+	const removed = this.like.indexOf(id);
+	if(removed!==-1){ //좋아요 취소
+	   console.log("REMOVED");
+	   this.like.splice(removed, 1);
+	   return await this.save();
+	}
+	else{
+		console.log("PUSH");
+		this.like.push(id);
+		return await this.save();
+	}
+	} catch(err) {
+		console.error(err);
+	}
+} 
 
 module.exports = mongoose.model('Post', postSchema);

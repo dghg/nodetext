@@ -56,6 +56,7 @@ input[type='text'], input[type='email'], input[type='password'], textarea {
 .user-name { font-weight: bold; font-size: 18px; }
 .count { font-weight: bold; color: crimson; font-size: 18px; }
 .timeline {
+  border : 3px solid silver;
   margin-top: 10px;
   width: 100%;
   display: inline-block;
@@ -95,15 +96,29 @@ input[type='text'], input[type='email'], input[type='password'], textarea {
   position: relative;
   margin-bottom: 10px;
 }
-.twit-author { display: inline-block; font-weight: bold; margin-right: 10px; }
+.twit-author { display: inline-block; font-weight: bold; margin-right: 10px; float:left; color:#ff7f00;}
 .twit-follow {
+  background-color: #26A5E0;
   padding: 1px 5px;
-  background: #fff;
   border: 1px solid silver;
   border-radius: 5px;
-  color: crimson;
+  color : white;
   font-size: 12px;
   cursor: pointer;
+  float:left;
+}
+.twit-content {
+	padding-top : 20px;
+}
+.like_count {
+	border : 1px solid silver;
+	padding : 1px 5px;
+	float : right;
+	background-color : #26A5E0;
+	color : white;
+    border: 1px solid silver;
+    cursor: pointer;
+    border-radius: 5px;
 }
 .twit-img { text-align: center; }
 .twit-img img { max-width: 75%; }
