@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const axios = require('axios');
 /* GET home page. */
-const URL = 'http://a3a3a.run.goorm.io/v1';
+const URL = 'http://a3a3a.run.goorm.io/v2';
 
 axios.defaults.headers.origin = 'http://a4a4a.run.goorm.io';
 const request = async (req, api) => {
@@ -25,6 +25,9 @@ const request = async (req, api) => {
 		throw err;
 	}
 };
+router.get('/', (req,res)=>{
+	res.render('main', { key : process.env.CLIENT_SECRET});
+});
 
 router.get('/test', async (req,res,next) => {
 	try {
@@ -46,7 +49,7 @@ router.get('/test', async (req,res,next) => {
 		});
 		return res.json(result.data);
 		
-	} catch(error){
+	} catch(err){
 		console.error(err);
 		if(err.response.status===419){
 			return res.json(err.response.data);

@@ -1,0 +1,22 @@
+doctype
+html
+	head
+		title FRONT API 요청 예제
+	body
+		#result
+		script.
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState===xhr.DONE){
+					if(xhr.status===200){
+						document.querySelector('#result').textContent=xhr.responseText;
+					} else {
+						console.error(xhr.responseText);
+					}
+				}
+			};
+			
+			xhr.open('POST', 'http://a3a3a.run.goorm.io/v2/token');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.send(JSON.stringify({clientSecret:'#{key}'}));
+			
