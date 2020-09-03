@@ -1,11 +1,13 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 
-const { verifyToken } = require('./middlewares');
+const { verifyToken, deprecated } = require('./middlewares');
 const Domain = require('../models/domain');
 const Post = require('../models/post');
 const router = express.Router();
 const Hashtag = require('../models/hashtag');
+
+router.use(deprecated);
 router.post('/token', async (req,res)=> {
 	const { clientSecret } = req.body;
 	try {

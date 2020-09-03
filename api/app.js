@@ -13,6 +13,7 @@ connect();
 const authRouter = require('./routes/auth');
 const indexRouter = require('./routes/page');
 const v1 = require('./routes/v1');
+const v2 = require('./routes/v2');
 const passportConfig = require('./passport');
 
 passportConfig(passport);
@@ -42,6 +43,7 @@ app.use(passport.session());
 app.use('/auth', authRouter);
 app.use('/', indexRouter);
 app.use('/v1', v1);
+app.use('/v2', v2);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
