@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const ColorHash = require('color-hash');
 const session = require('express-session');
 const flash = require('connect-flash');
 require('dotenv').config();
@@ -19,16 +20,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
+const session_ = session({
 	resave : false,
-	saveUninitialized:false,
+	saveUninitialized : false,
 	secret : process.env.COOKIE_SECRET,
 	cookie : {
 		httpOnly : true,
 		secure : false,
 	},
-}));
+});
+app.use(session_);
 app.use(flash());
+app.use((req,res,next)=>{
+	if(!req.session.color){
+		req.session.color = new ColorHash().hex(req.sessionID);
+	}
+	
+	next();
+});
+
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
