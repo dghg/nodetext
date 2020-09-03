@@ -1,9 +1,84 @@
 var express = require('express');
 var router = express.Router();
+const Room = require('../models/room');
+const Chat = require('../models/chat');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index');
+router.get('/', async (req,res,next)=>{
+	try{
+		const rooms = await Room.find({});
+		res.render('main', {
+			rooms,
+			title : '채팅방',
+			error : req.flash('roomError'),
+		});
+	} catch(err){
+		console.error(err);
+		next(err);
+	}
 });
 
+router.get('/room', (req,res)=>{
+	res.render('room', {title : '채팅방 생성'});
+});
+
+router.post('/room', async (req,res,next)=>{
+	try{
+		const room = await new Room({
+			title : req.body.title,
+			max : req.body.max,
+			owner : req.session.color,
+			password : req.body.password,
+		}).save();
+		
+		const io = req.app.get('io');
+		io.of('/room').emit('newRoom', room);
+		res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
+	} catch(err){
+		console.error(err);
+		next(err);
+	}
+});
+
+router.get('/room/:id', async(req,res,next)=>{
+	try {
+		const room = await Room.findOne({_id:req.params.id});
+		const io = req.app.get('io');
+		
+		if(!room){
+			return res.redirect('/');
+		}
+		
+		if(room.password && room.password!==req.query.password){
+			return res.redirect('/');
+		}
+		
+		const {rooms} = io.of('/chat').adapter;
+		if(rooms && rooms[req.params.id] && room.max<=rooms[req.params.id].length){
+			return res.redirect('/');
+		}
+		
+		return res.render('chat', {
+			room,
+			title : room.title,
+			chats : [],
+			user : req.session.color,
+		});
+	} catch(err){
+		console.error(err);
+		next(err);
+	}
+});
+
+router.delete('/room/:id', async (req,res,next)=>{
+	try{
+		await Room.remove({_id : req.params.id});
+		await Chat.remove({room : req.params.id});
+		setTimeout(()=>{
+			req.app.get('io').of('/room').emit('removeRoom', req.params.id);
+		}, 2000);
+	} catch(err){
+		console.error(err);
+		next(err);
+	}
+});
 module.exports = router;
