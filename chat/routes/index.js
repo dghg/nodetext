@@ -32,7 +32,7 @@ router.post('/room', async (req,res,next)=>{
 		
 		const io = req.app.get('io');
 		io.of('/room').emit('newRoom', room);
-		res.redirect(`/room/${newRoom._id}?password=${req.body.password}`);
+		res.redirect(`/room/${room._id}?password=${req.body.password}`);
 	} catch(err){
 		console.error(err);
 		next(err);
@@ -57,10 +57,12 @@ router.get('/room/:id', async(req,res,next)=>{
 			return res.redirect('/');
 		}
 		
+		const chats = await Chat.find({room : room._id}).sort('createdAt');
+		
 		return res.render('chat', {
 			room,
 			title : room.title,
-			chats : [],
+			chats,
 			user : req.session.color,
 		});
 	} catch(err){
@@ -68,11 +70,29 @@ router.get('/room/:id', async(req,res,next)=>{
 		next(err);
 	}
 });
-
+router.post('/room/:id/chat', async (req,res,next)=>{
+	try {
+		const chat = await new Chat({
+			room : req.params.id,
+			user : req.session.color,
+			chat : req.body.chat,
+		}).save();
+		
+		const io = req.app.get('io'); // get io instance
+		const namesp = io.of('/chat'); // chat namespace
+		namesp.to(req.params.id).emit('chat', chat); // req.params.id room에 chat event 전송
+		
+		res.send('ok');
+		
+	} catch(err) {
+		console.error(err);
+		next(err);
+	}
+});
 router.delete('/room/:id', async (req,res,next)=>{
 	try{
-		await Room.remove({_id : req.params.id});
-		await Chat.remove({room : req.params.id});
+		await Room.deleteOne({_id : req.params.id});
+		await Chat.deleteOne({room : req.params.id});
 		setTimeout(()=>{
 			req.app.get('io').of('/room').emit('removeRoom', req.params.id);
 		}, 2000);

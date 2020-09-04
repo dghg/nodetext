@@ -1,5 +1,5 @@
 const SocketIO = require('socket.io');
-
+const axios = require('axios');
 module.exports = (server,app, session)=> {
 	const io = SocketIO(server, {path : '/socket.io'});
 	app.set('io', io);
@@ -19,8 +19,7 @@ module.exports = (server,app, session)=> {
 		console.log('chat 네임스페이스 접속');
 		const req = socket.request;
 		const { headers : {referer}} = req;
-		const roomId = refere.split('/')[refere.split('/').length-1].replace(/\?.+/,'');
-		
+		const roomId = referer.split('/')[referer.split('/').length-1].replace(/\?.+/,'');
 		socket.join(roomId);
 		socket.to(roomId).emit('join', {
 			user : 'system',
@@ -47,6 +46,6 @@ module.exports = (server,app, session)=> {
 				})
 			}
 			}
-		});
+		);
 	});
 };

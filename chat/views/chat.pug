@@ -53,9 +53,9 @@ block content
     socket.on('chat', function (data) {
       var div = document.createElement('div');
       if (data.user === '#{user}') {
-        div.classList.add('mine');
+        div.classList.add('mine'); // rendering chat on right
       } else {
-        div.classList.add('other');
+        div.classList.add('other'); // rendering chat on left
       }
       var name = document.createElement('div');
       name.textContent = data.user;

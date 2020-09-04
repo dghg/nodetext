@@ -9,23 +9,15 @@ var debug = require('debug')('chat:server');
 var http = require('http');
 const session = require('express-session');
 const socket = require('../socket');
+const ColorHash = require('color-hash');
+
+
 /**
  * Get port from environment and store in Express.
  */
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
-const session_ = session({
-	resave : false,
-	saveUninitialized : false,
-	secret : process.env.COOKIE_SECRET,
-	cookie : {
-		httpOnly : true,
-		secure : false,
-	},
-});
-app.use(session_);
 
 
 /**
@@ -41,7 +33,7 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-socket(server,app, session_);
+socket(server,app, app.get('sessionmw'));
 
 /**
  * Normalize a port into a number, string, or false.
