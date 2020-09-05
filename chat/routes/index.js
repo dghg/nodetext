@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 const Room = require('../models/room');
 const Chat = require('../models/chat');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
 
 router.get('/', async (req,res,next)=>{
 	try{
@@ -84,6 +88,44 @@ router.post('/room/:id/chat', async (req,res,next)=>{
 		
 		res.send('ok');
 		
+	} catch(err) {
+		console.error(err);
+		next(err);
+	}
+});
+fs.readdir('uploads', (err)=>{
+	if(err){
+		fs.mkdirSync('uploads');
+	}
+});
+
+const upload = multer({
+	storage : multer.diskStorage({
+		destination(req,file,cb) {
+			cb(null, 'uploads/');
+		},
+		filename(req,file,cb){
+			const ext = path.extname(file.originalname);
+			cb(null, path.basename(file.originalname, ext) + Date.now() + ext);
+		},
+	}),
+	limits : { fileSize : 5 * 1024 * 1024},
+});
+
+router.post('/room/:id/gif', upload.single('gif'), async (req,res,next)=>{
+	try {
+		const chat = await new Chat({
+			room : req.params.id,
+			user : req.session.color,
+			gif : req.file.filename,
+		}).save();
+		
+		const io = req.app.get('io'); // get io instance
+		const namesp = io.of('/chat'); // chat namespace
+		namesp.to(req.params.id).emit('chat', chat); // req.params.id room에 chat event 전송
+		
+		res.send('ok');
+
 	} catch(err) {
 		console.error(err);
 		next(err);
