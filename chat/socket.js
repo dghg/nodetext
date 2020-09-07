@@ -1,5 +1,6 @@
 const SocketIO = require('socket.io');
 const axios = require('axios');
+const Chat = require('./models/chat');
 module.exports = (server,app, session)=> {
 	const io = SocketIO(server, {path : '/socket.io'});
 	app.set('io', io);
@@ -15,18 +16,20 @@ module.exports = (server,app, session)=> {
 		});
 	});
 	
-	chat.on('connection', (socket)=>{
+	chat.on('connection', async (socket)=>{
 		console.log('chat 네임스페이스 접속');
 		const req = socket.request;
 		const { headers : {referer}} = req;
 		const roomId = referer.split('/')[referer.split('/').length-1].replace(/\?.+/,'');
-		socket.join(roomId);
-		socket.to(roomId).emit('join', {
+		const chat = await new Chat({
+			room : roomId,
 			user : 'system',
-			chat : `${req.session.color}님이 입장하셨습니다.`,
-		});
+			chat : `${req.session.color}님이 입장하셨습니다. ${new Date(Date.now()).toUTCString()}`,
+		}).save();
+		socket.join(roomId);
+		socket.to(roomId).emit('join', chat);
 		
-		socket.on('disconnect', ()=>{
+		socket.on('disconnect', async ()=>{
 			console.log('chat 네임스페이스 접속 해제');
 			socket.leave(roomId);
 			const currentRoom = socket.adapter.rooms[roomId];
@@ -40,10 +43,12 @@ module.exports = (server,app, session)=> {
 				});
 			}
 			else{
-				socket.to(roomId).emit('exit', {
-					user : 'system',
-					chat : `${req.session.color}님이 퇴장하셨습니다`,
-				})
+				const chat = await new Chat({
+				room : roomId,
+				user : 'system',
+				chat : `${req.session.color}님이 퇴장하셨습니다. ${new Date(Date.now()).toUTCString()}`,
+				}).save();
+				socket.to(roomId).emit('exit', chat);
 			}
 			}
 		);

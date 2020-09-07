@@ -134,10 +134,10 @@ router.post('/room/:id/gif', upload.single('gif'), async (req,res,next)=>{
 router.delete('/room/:id', async (req,res,next)=>{
 	try{
 		await Room.deleteOne({_id : req.params.id});
-		await Chat.deleteOne({room : req.params.id});
+		await Chat.deleteMany({room : req.params.id});
 		setTimeout(()=>{
 			req.app.get('io').of('/room').emit('removeRoom', req.params.id);
-		}, 2000);
+		}, 1000);
 	} catch(err){
 		console.error(err);
 		next(err);

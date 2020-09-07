@@ -97,8 +97,8 @@ block content
           e.target.file=null;
       } else{
         console.error(xhr.responseText);
-	  }
-	  };
+      }
+      };
       xhr.open('POST', '/room/#{room._id}/gif');
       xhr.send(formData);
-	}); // upload gif file
+    }); // upload gif file
