@@ -6,10 +6,14 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const logger = require('./logger');
 require('dotenv').config();
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 
 const indexRouter = require('./routes/index');
-
+const authRouter = require('./routes/auth');
 const app = express();
+sequelize.sync();
+passportConfig(passport);
 
 const sessionMiddleware = session({
 	resave: false,
@@ -31,10 +35,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(sessionMiddleware);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
 
 app.use('/', indexRouter);
-
+app.use('/auth', authRouter);
 app.use((req,res,next)=>{
 	const err = new Error('Not Found');
 	err.status=404;

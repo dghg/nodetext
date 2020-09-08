@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-	sequelize.define('good', {
+	return sequelize.define('good', {
 		name: {
 		  type: DataTypes.STRING(40),
 		  allowNull: false,
@@ -19,3 +19,4 @@ module.exports = (sequelize, DataTypes) => {
 	})
 };
 
+//good has [ownerId , soldId] column that used as foreign key

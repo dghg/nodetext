@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-	sequelize.define('auction', {
+	return sequelize.define('auction', {
 		bid: {
 		  type: DataTypes.INTEGER,
 		  allowNull: false,
@@ -15,3 +15,4 @@ module.exports = (sequelize, DataTypes) => {
 	})
 };
 
+// auction has userId and GoodId used as foreign key
