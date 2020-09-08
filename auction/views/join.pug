@@ -1,0 +1,19 @@
+link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
+script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+// ---- Include the above in your HEAD tag --------
+head
+  title= title
+  link(rel='stylesheet', href='/css/style.css')
+.wrapper.fadeInDown
+  #formContent
+    // Login Form
+    form(action='/auth/join' method='post')
+      input#login.fadeIn.second(type='email' name='email' placeholder='email')
+      input#login.fadeIn.second(type='text' name='nick' placeholder='nickname')
+      input#login.fadeIn.second(type='number' name='money' placeholder='money')
+      input#password.fadeIn.third(type='password' name='password' placeholder='password')
+      input.fadeIn.fourth(type='submit' value='회원가입')
+    // Remind Passowrd
+    #formFooter
+      
