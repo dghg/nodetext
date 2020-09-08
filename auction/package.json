@@ -1,31 +1,33 @@
 {
-  "name": "chat",
+  "name": "auction",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build && nodemon dist/app.js",
-    "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./package.json "
+    "start": "nodemon app.js"
   },
   "dependencies": {
-    "@babel/node": "^7.10.5",
-    "@babel/polyfill": "^7.11.5",
+    "axios": "^0.20.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "~4.16.1",
     "express-session": "^1.17.1",
-    "helmet": "^4.1.0",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "multer": "^1.4.2",
+    "mysql2": "^2.1.0",
     "passport": "^0.4.1",
     "pug": "2.0.0-beta11",
-    "socket.io": "^2.3.0"
+    "sequelize": "^6.3.5",
+    "socket.io": "^2.3.0",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "rimraf": "^3.0.2"
+    "eslint": "^7.8.1",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-html": "^6.1.0",
+    "eslint-plugin-import": "^2.22.0"
   }
 }
