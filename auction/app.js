@@ -41,13 +41,12 @@ app.use(flash());
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use((req,res,next)=>{
-	const err = new Error('Not Found');
-	err.status=404;
-	next(err);
-});
 
 app.use((err,req,res,next) => {
+	if(!err){
+		const err = new Error('Not Found');
+		err.status=404;
+	}
 	logger.error(err.message);
 	res.locals.message = err.message;
 	res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
