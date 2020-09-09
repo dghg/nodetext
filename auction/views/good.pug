@@ -8,12 +8,13 @@ head
 .wrapper.fadeInDown
   #formContent
     // Login Form
-    form(action='/auth/login' method='post')
-      input#login.fadeIn.second(type='email' name='email' placeholder='email')
-      input#password.fadeIn.third(type='password' name='password' placeholder='password')
-      input.fadeIn.fourth(type='submit' value='Log In')
+    form(action='/good' method='post' enctype='multipart/form-data')
+      input#login.fadeIn.second(type='text' name='name' placeholder='상품명')
+      input#login.fadeIn.third(type='file' name='img' placeholder='이미지 업로드')
+      input#login.fadeIn.third(type='number' name='price' placeholder='시작 가격')
+      input.fadeIn.fourth(type='submit' value='상품 등록')
     // Remind Passowrd
     #formFooter
       if loginError
         .error-message= loginError
-      a.underlineHover(href='/join') Sign up
+      a.underlineHover(href='/') 메인으로 이동하기
