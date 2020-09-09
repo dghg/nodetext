@@ -8,9 +8,12 @@ const logger = require('./logger');
 require('dotenv').config();
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
+const sse = require('./socket/sse');
+const webSocket = require('./socket/socketio');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+
 const app = express();
 sequelize.sync();
 passportConfig(passport);
@@ -54,8 +57,11 @@ app.use((err,req,res,next) => {
 	res.render('error');
 });
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
 	logger.info(`Server listening on PORT ${process.env.PORT}`);
 });
 
+webSocket(server, app);
+sse(server);
+// websocket과 sse 모듈 연결
 module.exports = app;
