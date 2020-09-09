@@ -1,25 +1,30 @@
-block good
-  h2= good.name
-  div= '등록자: ' + good.owner.nick
-  div= '시작가: ' + good.price + '원'
-  strong#time(data-start=good.createdAt)
-  img#good-img(src='/img/' + good.img)
-
-block content
-  .timeline
+link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
+script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+// ---- Include the above in your HEAD tag --------
+head
+  title= title
+  link(rel='stylesheet', href='/css/style.css')
+  
+.wrapper.fadeInDown
+  #formContent
+    #nav
+      .user= good.owner.nick + '의 goods 입니다.'
+      .user= '시작가 ' + good.price + '원'
+      .user(data-start=good.createdAt)
+      img(src='/img/' + good.img)
     #bid
       for bid in auction
-        div
-          span= bid.user.nick + '님: '
-          strong= bid.bid + '원에 입찰하셨습니다.'
-          if bid.msg
-            span= '(' + bid.msg + ')'
-    form#bid-form
-      input(type='number' name='bid' placeholder='입찰가' required min=good.price)
-      input(type='msg' name='msg' placeholder='메시지(선택사항)' maxlength='100')
-      button.btn(type='submit') 입찰
-    if auctionError
-      .error-message= auctionError
+       div= bid.user.nick + ' : ' + bid.bid + '원에 입찰하셨습니다.'
+        if bid.msg
+          span#login='(' + bid.msg + ')'
+    #formFooter
+      form#bid-form
+        input#login.fadeIn.second(type='number' name='bid' placeholder='입찰가' required min=good.price)
+        input#login.fadeIn.second(type='msg' name='msg' placeholder='메시지(선택사항)' maxlength='100')
+        button.btn(type='submit') 입찰
+        if auctionError
+          .error-message= auctionError
   script(src='https://cdnjs.cloudflare.com/ajax/libs/event-source-polyfill/0.0.9/eventsource.min.js')
   script(src='/socket.io/socket.io.js')
   script.
@@ -62,17 +67,12 @@ block content
         return time.textContent = hours + ':' + minutes + ':' + seconds;
       }
     };
-    var socket = io.connect('http://localhost:8010', {
+    var socket = io.connect('http://a3a3a.run.goorm.io', {
       path: '/socket.io'
     });
     socket.on('bid', function (data) {
       var div = document.createElement('div');
-      var span = document.createElement('span');
-      span.textContent = data.nick + '님: ';
-      var strong = document.createElement('strong');
-      strong.textContent = data.bid + '원에 입찰하셨습니다.';
-      div.appendChild(span);
-      div.appendChild(strong);
+      div.textContent = data.nick + ' : ' + data.bid + '원에 입찰하셨습니다.'
       if (data.msg) {
         span = document.createElement('span');
         span.textContent = '(' + data.msg + ')';
