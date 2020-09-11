@@ -6,10 +6,17 @@ module.exports = (server,app) => {
 	app.set('io', io);
 	
 	io.on('connection', (socket) => {
+		console.log('socket 연결 성공');
+		setInterval(() => {
+			socket.emit('ssemessage', { // server send ssemessage event to connected client every seconds
+				now: Date.now().toString(),
+			});
+		}, 1000);
 		const req = socket.request;
 		const { headers : {referer}} = req;
 		const roomId = referer.split('/')[referer.split('/').length -1];
 		socket.join(roomId);
+
 		socket.on('disconnect', () => {
 			socket.leave(roomId);
 		});

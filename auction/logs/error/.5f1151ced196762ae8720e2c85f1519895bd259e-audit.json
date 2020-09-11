@@ -9,6 +9,16 @@
             "date": 1599527590364,
             "name": "logs/error/2020-09-08.error.log",
             "hash": "3428d45f6816c2100a7d575c81c52cbb"
+        },
+        {
+            "date": 1599625497277,
+            "name": "logs/error/2020-09-09.error.log",
+            "hash": "10e7242de3ee8bf8f0f073765915e279"
+        },
+        {
+            "date": 1599788808303,
+            "name": "logs/error/2020-09-11.error.log",
+            "hash": "4bfa226a44f27a5761e889d7bcd3bdaf"
         }
     ]
 }

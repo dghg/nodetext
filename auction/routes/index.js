@@ -4,9 +4,11 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const schedule = require('node-schedule');
 
-const { Good, Auction, User } = require('../models');
+const { Good, Auction, User, sequelize } = require('../models');
 const {isLoggedIn, isNotLoggedIn } = require('./middlewares');
+
 router.get('/', async (req,res,next)=>{
 	if(req.isAuthenticated()){
 		res.locals.user = req.user; // local에 user 저장
@@ -23,7 +25,23 @@ router.get('/', async (req,res,next)=>{
 		});
 	}
 });
-
+router.get('/list', isLoggedIn, async (req,res,next) => {
+	try {
+		const goods = await Good.findAll({
+			where: { soldId: req.user.id },
+			include: { model: Auction },
+			order: [[{model: Auction}, 'bid', 'DESC']],
+		});
+		
+		res.render('list', {
+			title: '낙찰 목록',
+			goods,
+			user: req.user,
+		});
+	} catch(err) {
+		logger.error(err);
+	}
+});
 router.get('/join', isNotLoggedIn, (req,res)=>{
 	res.render('join', {
 		title : 'SIGN UP',
@@ -51,13 +69,21 @@ const upload = multer({
 router.post('/good', isLoggedIn, upload.single('img'), async (req,res,next) => {
 	try {
 		const { name, price } = req.body;
-		await Good.create({
+		const good = await Good.create({
 			ownerId: req.user.id,
 			name,
 			img: req.file ? req.file.filename : 'noimage.png', // img 업로드 안할시 기본 img
 			price,
 		});
 		
+		const end = new Date(); //end에 하루 뒤 시간 저장
+		end.setDate(end.getDate() + 1);
+		schedule.scheduleJob(end, async () => {
+			const success = await Auction.findOne({ where : {goodId: good.id}, order: [['bid', 'DESC']],});
+			await Good.update({soldId: success.userId}, { where: { id: good.id}});
+			await User.update({money: sequelize.literal(`money - ${success.bid}`),}, {where: {id: success.userId},});
+		}); // end에 함수 예약, 서버 종료시 예약도 종료
+
 		res.redirect('/');
 		
 	} catch(err) {
