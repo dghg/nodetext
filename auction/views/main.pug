@@ -11,8 +11,10 @@ head
       .user= '안녕하세요 ' + user.nick + '님'
       .user= '보유 자산 ' + user.money + '원'
       input#my-id(type='hidden' value=user.id)
-	  
-      a.underlineHover(href='/good') 상품 등록
+      div
+        a.underlineHover(href='/list') 낙찰 목록
+      div
+        a.underlineHover(href='/good') 상품 등록
     #auction
       h2 경매 진행 목록
       table#login.fadeIn.second
@@ -32,13 +34,15 @@ head
     // Login Form
     #formFooter
       a.underlineHover(href='/auth/logout') LOGOUT
-  script(src='https://cdnjs.cloudflare.com/ajax/libs/event-source-polyfill/0.0.9/eventsource.min.js')
+  script(src='/socket.io/socket.io.js')
   script.
-    var es = new EventSource('/sse');
-    es.onmessage = function (e) {
+    var socket = io.connect('http://a3a3a.run.goorm.io', {
+      path: '/socket.io'
+    }); // connect websocket
+    socket.on('ssemessage', function(data) { // event 'ssemessage' listener : server sent to client every 1000ms, then client rendering time
       document.querySelectorAll('.time').forEach(function(td) {
         var end = new Date(td.dataset.start);
-        var server = new Date(parseInt(e.data, 10));
+        var server = new Date(parseInt(data.now, 10));
         end.setDate(end.getDate() + 1);
         if (server >= end) {
           return td.textContent = '00:00:00';
@@ -50,4 +54,5 @@ head
           return td.textContent = hours + ':' + minutes + ':' + seconds ;
         }
       });
-    };
+        return time.textContent = hours + ':' + minutes + ':' + seconds;
+      });   

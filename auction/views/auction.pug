@@ -11,7 +11,7 @@ head
     #nav
       .user= good.owner.nick + '의 goods 입니다.'
       .user= '시작가 ' + good.price + '원'
-      .user(data-start=good.createdAt)
+      .user#time(data-start=good.createdAt) 00:00:00
       img(src='/img/' + good.img)
     #bid
       for bid in auction
@@ -23,6 +23,8 @@ head
         input#login.fadeIn.second(type='number' name='bid' placeholder='입찰가' required min=good.price)
         input#login.fadeIn.second(type='msg' name='msg' placeholder='메시지(선택사항)' maxlength='100')
         button.btn(type='submit') 입찰
+        div
+          a.underlineHover(href='/') 메인으로 이동하기
         if auctionError
           .error-message= auctionError
   script(src='https://cdnjs.cloudflare.com/ajax/libs/event-source-polyfill/0.0.9/eventsource.min.js')
@@ -51,11 +53,13 @@ head
         msg: e.target.msg.value,
       }));
     });
-    var es = new EventSource("/sse");
     var time = document.querySelector('#time');
-    es.onmessage = function (e) {
+    var socket = io.connect('http://a3a3a.run.goorm.io', {
+      path: '/socket.io'
+    });
+    socket.on('ssemessage', function(data) {
       var end = new Date(time.dataset.start);
-      var server = new Date(parseInt(e.data, 10));
+      var server = new Date(parseInt(data.now, 10));
       end.setDate(end.getDate() + 1);
       if (server >= end) {
         return time.textContent = '00:00:00';
@@ -66,9 +70,6 @@ head
         var hours = ('0' + Math.floor((t / (1000 * 60 * 60)) % 24)).slice(-2);
         return time.textContent = hours + ':' + minutes + ':' + seconds;
       }
-    };
-    var socket = io.connect('http://a3a3a.run.goorm.io', {
-      path: '/socket.io'
     });
     socket.on('bid', function (data) {
       var div = document.createElement('div');

@@ -1,0 +1,28 @@
+link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
+script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+// ---- Include the above in your HEAD tag --------
+head
+  title= title
+  link(rel='stylesheet', href='/css/style.css')
+.wrapper.fadeInDown
+  #formContent
+    #nav
+      .user= '안녕하세요 ' + user.nick + '님'
+      .user= '보유 자산 ' + user.money + '원'
+      input#my-id(type='hidden' value=user.id)
+    #auction
+      h2 낙찰 목록
+      table#login.fadeIn.second
+        tr
+          th 상품명
+          th 이미지
+          th 가격
+        for good in goods
+          tr
+            td= good.name
+            td: img(src='/img/'+good.img)
+            td= good.auctions[0].bid
+    // Login Form
+    #formFooter
+      a.underlineHover(href='/') 메인으로 이동하기
